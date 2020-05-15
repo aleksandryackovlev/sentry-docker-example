@@ -1,0 +1,35 @@
+version: '3'
+services:
+  sentry:
+    build: .
+    ports:
+      - "8080:9000"
+    volumes:
+      - "${HOME}/sentry/files:/var/lib/sentry/files"
+    environment:
+      SENTRY_SECRET_KEY: "some-secret-key"
+
+  sentry-worker:
+    build: .
+    volumes:
+      - "${HOME}/sentry/files:/var/lib/sentry/files"
+    environment:
+      SENTRY_SECRET_KEY: "some-secret-key"
+    command: run worker
+
+  sentry-cron:
+    build: .
+    environment:
+      SENTRY_SECRET_KEY: "some-secret-key"
+    command: run worker
+
+  redis:
+    image: "redis:5.0-alpine"
+    volumes:
+      - "${HOME}/sentry-redis:/data"
+
+  postgres:
+    image: "postgres:9.6"
+    environment:
+      POSTGRES_PASSWORD: "secret"
+      POSTGRES_USER: "sentry"
