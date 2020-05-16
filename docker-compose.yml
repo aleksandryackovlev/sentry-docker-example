@@ -1,35 +1,53 @@
-version: '3'
+version: '3.4'
+x-sentry-defaults: &sentry_defaults
+  build: 
+    context: .
+  depends_on:
+    - redis
+    - postgres-test
+  environment:
+    SENTRY_SECRET_KEY: some-secret-key
+    SENTRY_REDIS_HOST: redis
+    SENTRY_DB_NAME: sent
+    SENTRY_DB_USER: sent
+    SENTRY_POSTGRES_HOST: postgres-test
+    POSTGRES_PASSWORD: secret
+    POSTGRES_USER: sent
+    POSTGRES_DB: sent
+  volumes:
+    - sentry-data:/data
+    # - ./sentry:/etc/sentry
 services:
-  sentry:
-    build: .
+  sentry-web:
+    << : *sentry_defaults
+    container_name: sentry-web
     ports:
       - "8080:9000"
-    volumes:
-      - "${HOME}/sentry/files:/var/lib/sentry/files"
-    environment:
-      SENTRY_SECRET_KEY: "some-secret-key"
 
   sentry-worker:
-    build: .
-    volumes:
-      - "${HOME}/sentry/files:/var/lib/sentry/files"
-    environment:
-      SENTRY_SECRET_KEY: "some-secret-key"
+    << : *sentry_defaults
     command: run worker
 
   sentry-cron:
-    build: .
-    environment:
-      SENTRY_SECRET_KEY: "some-secret-key"
-    command: run worker
+    << : *sentry_defaults
+    command: run cron
 
   redis:
-    image: "redis:5.0-alpine"
+    image: redis:5.0-alpine
     volumes:
-      - "${HOME}/sentry-redis:/data"
+      - sentry-redis:/data
 
-  postgres:
-    image: "postgres:9.6"
+  postgres-test:
+    image: postgres
     environment:
-      POSTGRES_PASSWORD: "secret"
-      POSTGRES_USER: "sentry"
+      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: sent
+      POSTGRES_DB: sent
+      POSTGRES_HOST_AUTH_METHOD: 'trust'
+    volumes:
+      - sentry-postges:/var/lib/postgresql/data
+
+volumes:
+  sentry-data:
+  sentry-postges:
+  sentry-redis:
