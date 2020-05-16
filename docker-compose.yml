@@ -11,9 +11,6 @@ x-sentry-defaults: &sentry_defaults
     SENTRY_DB_NAME: sent
     SENTRY_DB_USER: sent
     SENTRY_POSTGRES_HOST: postgres-test
-    POSTGRES_PASSWORD: secret
-    POSTGRES_USER: sent
-    POSTGRES_DB: sent
   volumes:
     - sentry-data:/data
     # - ./sentry:/etc/sentry
@@ -26,10 +23,18 @@ services:
 
   sentry-worker:
     << : *sentry_defaults
+    links:
+      - "postgres-test:localhost"
+    environment:
+      SENTRY_POSTGRES_HOST: localhost
     command: run worker
 
   sentry-cron:
     << : *sentry_defaults
+    links:
+      - "postgres-test:localhost"
+    environment:
+      SENTRY_POSTGRES_HOST: localhost
     command: run cron
 
   redis:
