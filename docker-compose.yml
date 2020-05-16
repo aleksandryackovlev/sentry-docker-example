@@ -37,6 +37,18 @@ services:
       SENTRY_POSTGRES_HOST: localhost
     command: run cron
 
+  minio-server:
+    image: minio/minio
+    container_name: minio-server
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: minio-access-key
+      MINIO_SECRET_KEY: minio-secret-key
+    volumes:
+      - minio-data:/data
+    command: server /data
+
   redis:
     image: redis:5.0-alpine
     volumes:
@@ -56,3 +68,4 @@ volumes:
   sentry-data:
   sentry-postges:
   sentry-redis:
+  minio-data:
