@@ -11,6 +11,10 @@ x-sentry-defaults: &sentry_defaults
     SENTRY_DB_NAME: sent
     SENTRY_DB_USER: sent
     SENTRY_POSTGRES_HOST: postgres-test
+    MINIO_HOST: http://minio-server:9000
+    MINIO_ACCESS_KEY: minio-access-key
+    MINIO_SECRET_KEY: minio-secret-key
+    MINIO_BUCKET: sentry
   volumes:
     - sentry-data:/data
     # - ./sentry:/etc/sentry
@@ -23,23 +27,15 @@ services:
 
   sentry-worker:
     << : *sentry_defaults
-    links:
-      - "postgres-test:localhost"
-    environment:
-      SENTRY_POSTGRES_HOST: localhost
     command: run worker
 
   sentry-cron:
     << : *sentry_defaults
-    links:
-      - "postgres-test:localhost"
-    environment:
-      SENTRY_POSTGRES_HOST: localhost
     command: run cron
 
   minio-server:
     image: minio/minio
-    container_name: minio-server
+    container_name: s3-server
     ports:
       - "9000:9000"
     environment:

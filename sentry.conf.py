@@ -227,9 +227,12 @@ SENTRY_DIGESTS = 'sentry.digests.backends.redis.RedisBackend'
 # Uploaded media uses these `filestore` settings. The available
 # backends are either `filesystem` or `s3`.
 
-SENTRY_OPTIONS['filestore.backend'] = 'filesystem'
+SENTRY_OPTIONS['filestore.backend'] = 's3'
 SENTRY_OPTIONS['filestore.options'] = {
-    'location': env('SENTRY_FILESTORE_DIR'),
+    'access_key': env('MINIO_ACCESS_KEY'),
+    'secret_key': env('MINIO_SECRET_KEY'),
+    'bucket_name': env('MINIO_BUCKET'),
+    'endpoint_url': env('MINIO_HOST'),
 }
 
 ##############
