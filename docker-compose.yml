@@ -5,6 +5,7 @@ x-sentry-defaults: &sentry_defaults
   depends_on:
     - redis
     - postgres-test
+    - minio-server
   environment:
     SENTRY_SECRET_KEY: some-secret-key
     SENTRY_REDIS_HOST: redis
@@ -17,7 +18,6 @@ x-sentry-defaults: &sentry_defaults
     MINIO_BUCKET: sentry
   volumes:
     - sentry-data:/data
-    # - ./sentry:/etc/sentry
 services:
   sentry-web:
     << : *sentry_defaults
