@@ -1,7 +1,7 @@
 version: '3.4'
 x-sentry-defaults: &sentry_defaults
   build: 
-    context: .
+    context: ./sentry
   depends_on:
     - redis
     - postgres-test
