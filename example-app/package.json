@@ -5,9 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "node ./server.js"
   },
   "dependencies": {
+    "@sentry/browser": "^5.15.5",
+    "@sentry/node": "^5.15.5",
+    "@sentry/webpack-plugin": "^1.11.1",
+    "dotenv": "^8.2.0",
     "next": "9.4.1",
     "react": "16.13.1",
     "react-dom": "16.13.1"
