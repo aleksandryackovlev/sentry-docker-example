@@ -2,7 +2,7 @@ sentry-init:
 	docker-compose run sentry-web upgrade
 
 sentry-start:
-	docker-compose up sentry-web
+	docker-compose up sentry-web sentry-worker sentry-cron
 
 app-init:
 	docker-compose run --rm app-install
