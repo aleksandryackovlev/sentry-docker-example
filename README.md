@@ -43,10 +43,14 @@ Next, turn off `Allow JavaScript source fetching` on [http://localhost:8080/orga
 Copy `.env.sample` to `.env` and fill in all environment variables.
 
 `SENTRY_DSN` - value from the "DSN (Deprecated)" from `http://localhost:8080/settings/sentry/projects/YOUR_PROJECT_NAME/keys/`
+
 `SENTRY_AUTH_TOKEN` - token from [http://localhost:8080/settings/account/api/auth-tokens/](http://localhost:8080/settings/account/api/auth-tokens/)
+
 `SENTRY_RELEASE` - a new release id, leave it as it is if you don't know what to write here
+
 `SENTRY_PROJECT` - your project name
-`SENTRY_ORG` - your organization naem, by default it's `sentry`
+
+`SENTRY_ORG` - your organization name, by default it's `sentry`
 
 Then install application's dependencies by running:
 ```
