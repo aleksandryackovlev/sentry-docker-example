@@ -5,14 +5,14 @@ x-sentry-defaults: &sentry_defaults
     context: ./sentry
   depends_on:
     - redis
-    - postgres-test
+    - postgres
     - minio-server
   environment:
     SENTRY_SECRET_KEY: some-secret-key
     SENTRY_REDIS_HOST: redis
     SENTRY_DB_NAME: sent
     SENTRY_DB_USER: sent
-    SENTRY_POSTGRES_HOST: postgres-test
+    SENTRY_POSTGRES_HOST: postgres
     MINIO_HOST: http://minio-server:9000
     MINIO_ACCESS_KEY: minio-access-key
     MINIO_SECRET_KEY: minio-secret-key
@@ -58,7 +58,7 @@ services:
     volumes:
       - sentry-redis:/data
 
-  postgres-test:
+  postgres:
     image: postgres
     environment:
       POSTGRES_PASSWORD: secret
@@ -76,17 +76,25 @@ services:
     << : *app_defaults
     depends_on:
       - sentry-web
+      - sentry-worker
+      - sentry-cron
     command: yarn build
     environment:
       NODE_ENV: production
+      SENTRY_URL: http://sentry-web:9000/
 
-  app-build:
+  app-start:
     << : *app_defaults
     depends_on:
       - sentry-web
+      - sentry-worker
+      - sentry-cron
     command: yarn start
+    ports:
+      - "3000:3000"
     environment:
       NODE_ENV: production
+      SENTRY_URL: http://sentry-web:9000/
 
 volumes:
   sentry-data:
