@@ -287,8 +287,6 @@ else:
 if SENTRY_OPTIONS['mail.enable-replies']:
     SENTRY_OPTIONS['mail.reply-hostname'] = env('SENTRY_SMTP_HOSTNAME') or ''
 
-SENTRY_SCRAPE_JAVASCRIPT_CONTEXT = False
-
 #####################
 # SLACK INTEGRATION #
 #####################
